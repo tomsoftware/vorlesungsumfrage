@@ -1,0 +1,125 @@
+$:HEAD$
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<HTML>
+<HEAD>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+  <TITLE>Eingabestatus</TITLE>
+
+  <link rel="stylesheet" type="text/css" href="static/style.css" />
+
+</HEAD>
+
+<BODY style="margin:0px; padding:0px">
+
+<script type="text/javascript">
+  function openrep(dest, temp)
+  {
+    document.sendrep.tmp.value=temp;
+    document.sendrep.action=dest;
+    document.sendrep.submit();
+  }
+
+</SCRIPT>
+
+$:VOTE_HEAD$
+  <table border="0" width="100%" id="head_info"  cellspacing="0" cellpadding="2">
+    <tr>
+      <td nowrap="nowrap">
+	<FORM method="post" ACTION="vote_select.php"  name="form_navi"  id="form_navi" style="margin:0px; padding:0px">
+	  <input type="hidden" name="vid" value="$VOTE_ID$" />
+	  <input type="hidden" name="_sid" value="$SID$" />
+	  <input type="hidden" name="_ch" value="$CH$" />
+	</FORM>
+	<a href="javascript:document.form_navi.submit();">
+	  <img src="$IMAGE_HTML_PATH$vote_home.gif" border="0" align="top" /> Start
+	</a>
+      </td>
+      <td nowrap="nowrap"><b>Umfrage:</b> $VOTE_NAME$</td>
+      <td nowrap="nowrap"><b>Benutzer:</b> $USERNAME$ ($USERNAME_STATUS$)</td>
+    </tr>
+  </table>
+
+  
+  <div id="form_vote">
+
+  <H1>Eingabestatus: $VOTE_NAME$</H1>
+  <FORM method="post" action="$this$" name="sendrep" style="margin:0px; padding:0px" target="_blank">
+    <input type="hidden" name="vid" value="$VOTE_ID$" />
+    <input type="hidden" name="tmp" value="" />
+
+
+    <table border="1" cellspacing="0" cellpadding="5" style="margin:3px;">
+      <tr>
+$:VOTE_HEAD_HEAD$
+	<th>&nbsp;</th>
+$:VOTE_HEAD_GROUPS$
+	<th>$GROUP_HEAD_NAME$</th>
+$:VOTE_HEAD_FEET$
+	<th>Anzahl der Datens&auml;tze:</th>
+	<th>Auswertung:</th>
+	<th>Auswertung (tex):</th>
+	<th>Auswertung (Excel):</th>
+      </tr>
+
+$:VOTE_DATA_HEAD$
+      <tr>
+	<td><input type="checkbox" name="gid[]" value="$last_list_id$" />
+$:VOTE_DATA_GROUPS$
+	<td>$g_daten$</td>
+$:VOTE_DATA_FEET$
+	<td>$v_count$</td>
+	<td><a href="vote_report.php?vid=$VOTE_ID$&amp;gid=$last_list_id$">HTML</a></td>
+	<td><a href="vote_report.php?vid=$VOTE_ID$&amp;gid=$last_list_id$&amp;tmp=vote_report_tex.txt">LaTeX</a></td>
+	<td><a href="vote_report.php?vid=$VOTE_ID$&amp;gid=$last_list_id$&amp;tmp=vote_report_xls.txt">Excel</a></td>
+      </tr>
+$:VOTE_FEET$
+    </table>
+
+    <input type="submit" value="HTML Auswertung" style="width:140px" onclick="openrep('vote_report.php','');" />
+    <input type="submit" value="Tex Auswertung"  style="width:140px" onclick="openrep('vote_report.php','vote_report_tex.txt');" />
+    <input type="submit" value="Excel Auswertung"  style="width:140px" onclick="openrep('vote_report.php','vote_report_xls.txt');" />
+    Weiter Gruppierung: 
+      <SELECT name="add_filter_group" size="1">
+	<option value="">- nicht weiter unterteilen -</option
+	$LIST_ADD_GROUPS$
+      </SELECT>
+    <br />
+    <input type="submit" value="HTML Aushang" style="width:140px" onclick="openrep('vote_aushang.php','');" />
+    <input type="submit" value="Tex Aushang"  style="width:140px" onclick="openrep('vote_aushang.php','vote_aushang_tex.txt');" />
+
+
+  </FORM>
+
+  <br />
+  <br />
+  <H1>Gesamt Auswertung von: $VOTE_NAME$</H1>  
+    <a href="vote_report.php?vid=$VOTE_ID$">HTML Export</a><br />
+    <a href="vote_report.php?vid=$VOTE_ID$&amp;tmp=vote_report_tex.txt">Tex Export</a><br />
+
+    <a href="vote_aushang.php?vid=$VOTE_ID$">HTML Aushang</a><br />
+    <a href="vote_aushang.php?vid=$VOTE_ID$&amp;tmp=vote_report_tex.txt">Tex Aushang</a><br />
+  </div>
+
+
+
+$:ERROR$
+  <div id="error_box">
+    <img src="$IMAGE_HTML_PATH$dialog-warning.gif" width="30" alt="Warnung" /> Fehler:
+    <div id="error_text">
+      $ERROR_LIST$
+    </div>
+  </div>
+
+$:INFO$
+  <div id="info_box">
+    <img src="$IMAGE_HTML_PATH$dialog_question.gif" width="30" alt="Information" /> Hinweis:
+    <div id="info_text">
+      $INFO_LIST$
+    </div>
+  </div>
+$:FEET$
+
+
+</BODY>
+</HTML>

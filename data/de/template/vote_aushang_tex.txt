@@ -1,0 +1,200 @@
+$:HEAD$
+$@Content-type: application/x-latex$
+$@Content-Disposition: attachment; filename=report.tex$
+$!html:off$
+$!replace:",\grqq{}$
+$!replace:%,\%$
+$!replace:&,\&$
+$!replace:>,\begin{math}>\end{math}$
+$!replace:<,\begin{math}<\end{math}$
+
+\documentclass{article}
+\usepackage{german,a4}
+\usepackage[latin1]{inputenc}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage{longtable}
+
+% - Strich-Skala
+\newsavebox{\skala}
+\setlength{\unitlength}{0.42mm}
+\savebox{\skala}(100,5)[bl]
+{
+  \put(0,2.5){\line(1,0){100}}
+  \multiput(0,0)(50,0){3}{\line(0,1){5}}
+  \multiput(10,1)(10,0){4}{\line(0,1){3}}
+  \multiput(60,1)(10,0){4}{\line(0,1){3}}
+}
+
+%- Counter definieren -%
+%- leider habe ich es nicht geschaft lokale Counter zu erzeugen -%
+\newcount\mystart % lege numerischen Speicherbereich mystart an fuer Start-Position
+\newcount\mylen % fuer laenge
+\newcount\mydir % fuer richtung
+
+\mystart=0
+\mylen=0
+\mydir=1
+
+
+% - Balken auf Strichskala
+\newcommand{\balken}[5]%
+{%
+    \ifthenelse{\equal{#1}{}}{%
+	% Da gibt es keinen Mittelwert!
+    }{%
+        \mystart=10% belege mystart mit Wert 10
+        \mylen=#1%
+        \mydir=1%
+        %
+        \ifnum #2<0%
+            \mystart=60% OK wir starten in der Mitte (50+10)
+            %
+            \ifnum #1>0%
+                \mydir=1%
+            \else%
+                \multiply\mylen by -1%
+                \mydir=-1% der Balken soll in negative richtung laufen
+            \fi%
+        \else%
+            \mystart=10% es muss am anfang begonnen werden
+            \multiply\mylen by 2% und der Balken soll doppelt so lang werden
+            \mydir=1%
+        \fi%
+        %
+        \begin{picture}(110,5)\linethickness{0.8mm}%
+            \put(\the\mystart,2.5){\line( \the\mydir,0){\the\mylen}}\put(10,0){\usebox{\skala}}
+        \end{picture}
+    }%
+}%
+
+
+
+\pagestyle{empty}
+
+\setlength{\textwidth}{17cm}
+\setlength{\textheight}{25.5cm}
+\setlength{\topmargin}{-8mm}
+\setlength{\topskip}{0mm}
+\setlength{\headsep}{0mm}
+\setlength{\headheight}{0mm}
+\setlength{\oddsidemargin}{-5mm}
+
+\newlength{\tabspace}\settowidth{\tabspace}{$$-$$9.99}
+
+%\newcounter{wert}
+
+%\newcommand{\balkenp}[2]{\begin{picture}(100,5)(-50,0)
+%\put(0,0){\mbox{\rule[0.2mm]{#1\unitlength}{2mm} #2}}
+%\put(0,-4.5){\line(0,1){9.5}}
+%\end{picture}}
+
+%\newcommand{\balkenn}[2]{\begin{picture}(100,5)(-50,0)
+%\settowidth{\negnumwidth}{$-$#2 }
+%\put(-#1,0){\mbox{\hspace{-\negnumwidth}$-$#2 }}
+%\put(-#1,0){\rule[0.2mm]{#1\unitlength}{2mm}}
+%\put(0,-4.5){\line(0,1){9.5}}
+%\end{picture}}
+
+\newcommand{\Achse}[2]{\begin{picture}(120,13)
+\put(10,6){\usebox{\achse}}
+\put(0,3){\makebox(0,0)[tl]{\scriptsize #1}}
+\put(120,3){\makebox(0,0)[tr]{\scriptsize #2}}
+\end{picture}}
+
+\newsavebox{\achse}
+\savebox{\achse}(100,5)[l]{
+\put(0,5){\line(1,0){100}}
+%\setcounter{wert}{-5}
+\multiput(0,4)(20,0){6}{\line(0,1){1}}
+%\multiput(0,3)(20,0){6}{\makebox(0,0)[t]{$\arabic{wert}$}\addtocounter{wert}{2}}
+\put(50,3){\makebox(0,0)[t]{}}
+}
+
+\renewcommand{\arraystretch}{1.25}
+
+%%%%%%%%%%%%%%%%%%%%
+$:VOTE_HEAD$%%%-- VOTE_HEAD:
+%%%%%%%%%%%%%%%%%%%%
+
+\title{$VOTE_NAME$}
+\author{Fachschaft Physik - Uni Augsburg}
+
+\begin{document}
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%
+$:QUESTIO_HEAD$%%-- QUESTIO_HEAD
+%%%%%%%%%%%%%%%%%%%%
+
+\fbox{
+\begin{minipage}{0.9\textwidth}
+{\large\bf\begin{center}
+$FIELD_NAME$
+\end{center}}\bigskip
+
+\begin{longtable}{r@{\hspace{\tabspace}}l@{\hspace{\tabspace}}}
+$:QUESTION_GROUP_HEAD$%%-- QUESTION_GROUP_HEAD
+$:QUESTION_GROUP_ITEM$%%-- QUESTION_GROUP_ITEM
+$GROUP_TEXT$ %- $GROUP_NAME$ ($GROUP_COMMENT$) : $GROUP_TEXT$ $GROUP_VALUE$
+$:QUESTION_GROUP_FEET$%%-- QUESTION_GROUP_FEET
+& %
+$:QUESTION_DATA$%%-- QUESTION_DATA
+%
+%--------------------------%
+$:FIELD_TYPE_NUMBER_HEAD$ %
+% --------------------------- Hier kommt eine numerisches Feld ----------------------------------------------
+$?FIELD_AVG!=$%%-- if (FIELD_AVG!='')
+  \balken{$FIELD_AVG_SCAL_TO_50$}{$FIELD_MIN$}{$FIELD_MAX$}{$FIELD_MAX_NAME$}{$FIELD_MIN_NAME$} $FIELD_AVG$ $FIELD_EINHEIT$
+$?else$%
+
+$?$%
+$:FIELD_TYPE_NUMBER_FEET$
+%
+%
+%
+%
+%
+%
+%
+$:FIELD_TYPE_OPTION_HEAD$ %
+% --------------------------- Hier kommt ein Auswahl Feld ----------------------------------------------
+$?FIELD_AVG!=$%%-- if (FIELD_AVG!='')
+  \balken{$FIELD_AVG_SCAL_TO_50$}{$FIELD_MIN$}{$FIELD_MAX$}{$FIELD_MAX_NAME$}{$FIELD_MIN_NAME$} $FIELD_AVG$ $FIELD_EINHEIT$
+$?else$%
+  keine Angaben
+$?$%
+$:FIELD_TYPE_OPTION_FEET$%%-- FIELD_TYPE_OPTION_FEET
+%
+%
+%
+%
+%
+%
+$:FIELD_TYPE_STRING_HEAD$ %
+% --------------------------- Hier kommt eine String Feld ----------------------------------------------
+  \\
+
+  \multicolumn{2}{p{\linewidth}}{
+    \begin{itemize}
+$:FIELD_TYPE_STRING_ITEM$
+      \item $FIELD_VALUE$
+$:FIELD_TYPE_STRING_FEET$
+    \end{itemize}
+  }
+
+%
+%
+$:QUESTION_DATA_FEET$%%-- QUESTION_DATA_FEET
+\\
+$:QUESTION_FEET$%%-- QUESTION_FEET
+& \Achse{$FIELD_MIN_NAME$}{$FIELD_MAX_NAME$}
+
+\end{longtable}
+\end{minipage}
+}% \fbox
+\vfill
+
+$:VOTE_FEET$%%-- VOTE_FEET
+
+\end{document}

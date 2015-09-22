@@ -1,0 +1,8 @@
+1.) Neuen Datensatz in [vote] einf¸gen (neue ID: *1*)
+2.) Alle Felder in [vote_field] anlegen
+  => beim kopieren darauf achten dass:
+     a) [vote_field].[vote_Index] auf (*1*) ge‰ndert wird bei den neuen Datens‰tzen (neue ID: *2*)
+     b) [vote_field].[vote_Field_Filter_Depending_Field_Index] auf die entsprechenden (*2*) ge‰ndert wird
+
+
+Gruﬂ Thomas

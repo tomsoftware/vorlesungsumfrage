@@ -1,0 +1,219 @@
+$:HEAD$
+$@Content-type: application/x-latex$
+$@Content-Disposition: attachment; filename=report.tex$
+$!html:off$
+$!replace:",\grqq{}$
+$!replace:%,\%$
+$!replace:&,\&$
+$!replace:>,\begin{math}>\end{math}$
+$!replace:<,\begin{math}<\end{math}$
+
+
+\documentclass[a4paper]{article}
+
+\usepackage[ngerman]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{ngerman}
+\usepackage[DIV=19]{typearea}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{longtable}
+\usepackage{calc}
+\usepackage{ifthen}
+
+
+% - Keine Überschriften numerrierung anzeigen
+\setcounter{secnumdepth}{0}
+
+% - Strich-Spala
+\newsavebox{\skala}
+\setlength{\unitlength}{0.42mm}
+\savebox{\skala}(100,5)[bl]
+{
+  \put(0,2.5){\line(1,0){100}}
+  \multiput(0,0)(50,0){3}{\line(0,1){5}}
+  \multiput(10,1)(10,0){4}{\line(0,1){3}}
+  \multiput(60,1)(10,0){4}{\line(0,1){3}}
+}
+
+% ---- iif( bool-Argument , wenn True, wenn false)
+\newcommand{\iif}[3]%
+{%
+    \ifthenelse{\equal{#1}{}}{%
+        #3% -- False Wert
+    }{%
+        \ifthenelse{\equal{#1}{0}}{%
+            #3% -- False Wert        
+         }{%
+            #2% -- True Wert
+         }%
+    }%
+}%
+
+
+%- Counter definieren -%
+%- leider habe ich es nicht geschaft lokale Counter zu erzeugen -%
+\newcount\mystart % lege numerischen Speicherbereich mystart an fuer Start-Position
+\newcount\mylen % fuer laenge
+\newcount\mydir % fuer richtung
+
+\mystart=0
+\mylen=0
+\mydir=1
+
+
+
+
+% - Balken auf Strichskala
+\newcommand{\balken}[5]%
+{%
+    \ifthenelse{\equal{#1}{}}{%
+	% Da gibt es keinen Mittelwert!
+    }{%
+        \mystart=0% belege mystart mit Wert 0
+        \mylen=#1%
+        \mydir=1%
+        %
+        \ifnum #2<0%
+            \mystart=50% OK wir starten in der Mitte
+            %
+            \ifnum #1>0%
+                \mydir=1%
+            \else%
+                \multiply\mylen by -1%
+                \mydir=-1% der Balken soll in negative richtung laufen
+            \fi%
+        \else%
+            \mystart=0% es muss am anfang begonnen werden
+            \multiply\mylen by 2% und der Balken soll doppelt so lang werden
+            \mydir=1%
+        \fi%
+        %
+        \begin{picture}(100,5)\linethickness{0.8mm}%
+            \put(\the\mystart,2.5){\line( \the\mydir,0){\the\mylen}}\put(0,0){\usebox{\skala}}
+        \end{picture}
+    }%
+}%
+
+
+% - ein Histogram Balken
+\newcommand{\histrule}[1]%
+{%
+    \ifthenelse{\equal{#1}{}}{%
+	   \rule{1pt}{2mm}%
+    }{%
+        \ifnum #1>0%
+	       \rule{#1pt}{2mm}%
+        \else%
+            \rule{1pt}{2mm}%
+        \fi%        
+    }%
+} %
+
+
+$:VOTE_HEAD$
+\title{$VOTE_NAME$}
+\author{Fachschaft Physik - Uni Augsburg}
+\begin{document}
+\tableofcontents
+
+
+
+$:GROUP_HEAD$
+% ------- Neue Gruppe ----------------
+\newpage
+\section{ %
+$:GROUP_HEAD_HEAD$ %
+$:GROUP_HEAD_ITEM$ $GROUP_HEAD_NAME$ $GROUP_HEAD_VALUE$ $:GROUP_HEAD_FEET$ }
+$:GROUP_FIELDS_HEAD$ %
+%
+%
+\noindent
+\begin{longtable}{p{6cm}p{120pt}r}
+  \hline
+$:FIELD_TYPE_NUMBER_HEAD$ %
+% --------------------------- Hier kommt eine numerisches Feld ----------------------------------------------
+\raggedright $FIELD_NAME$ 
+  &
+    \iif{$FIELD_AVG_VAL$}{Mittelwert: $FIELD_AVG$ $FIELD_EINHEIT$ \scriptsize $FIELD_EINHEIT2$}{}
+  &
+$:FIELD_HISTOGRAMM_H_HEAD$ %
+    \renewcommand{\arraystretch}{0.5}
+    \begin{tabular}[t]{rp{70pt}}
+$:FIELD_HISTOGRAMM_H_ITEM$ %
+      \scriptsize
+      $HISO_NAME$
+    &
+      \scriptsize
+      \histrule{$HISO_VAL_SCAL_TO_50$} $HISO_VAL$
+    \\
+$:FIELD_HISTOGRAMM_H_FEET$ %
+    \end{tabular}
+$:FIELD_TYPE_NUMBER_FEET$ %
+  \\
+  \hline
+
+$:FIELD_TYPE_STRING_HEAD$
+% --------------------------- Hier kommt eine String Feld ----------------------------------------------
+  \multicolumn{3}{p{0.95\linewidth}}{
+    \raggedright $FIELD_NAME$
+    \begin{itemize}
+$:FIELD_TYPE_STRING_ITEM$ %
+      \vspace{-0.1in}
+      \item $FIELD_VALUE$
+$:FIELD_TYPE_STRING_FEET$ %
+    \end{itemize}
+  }
+
+  \\
+  \hline
+
+$:FIELD_TYPE_OPTION_HEAD$
+% --------------------------- Hier kommt ein Auswahl Feld ----------------------------------------------
+\raggedright $FIELD_NAME$
+  &
+    \balken{$FIELD_AVG_SCAL_TO_50$}{$FIELD_MIN$}{$FIELD_MAX$}{$FIELD_MAX_NAME$}{$FIELD_MIN_NAME$}\raggedright
+    \iif{$FIELD_AVG_VAL$}{Mittelwert: $FIELD_AVG$ $FIELD_EINHEIT$ \scriptsize $FIELD_EINHEIT2$}{}
+  &
+$:FIELD_HISTOGRAMM_HEAD$ %
+    \renewcommand{\arraystretch}{0.5}
+    \begin{tabular}[t]{rp{70pt}}
+$:FIELD_HISTOGRAMM_ITEM$ %
+      \scriptsize
+      $HISO_NAME$
+    &
+      \scriptsize
+      \histrule{$HISO_VAL_SCAL_TO_50$}  $HISO_VAL$
+    \\
+$:FIELD_HISTOGRAMM_FEET$ %
+    \end{tabular}
+$:FIELD_TYPE_OPTION_FEET$ %
+  \\
+  \hline
+%
+$:GROUP_FIELDS_FEET$ %
+\end{longtable}
+%
+$:GROUP_SUB_HEAD$ %
+% ------- Untergruppe ----------------
+\newpage
+\subsection{ %
+$:GROUP_SUB_FEET$ %
+$:GROUP_FEET$ %
+% ------- Gruppe schliessen----------------
+$:VOTE_FEET$ %
+$:ERROR$ %
+% -------------------------------------------------------------------------------- %
+% -------------------------------------------------------------------------------- %
+% ----------    Beim erstellen des Dokumentes sind Fehler aufgetreten!   --------- %
+% -------------------------------------------------------------------------------- %
+%  $ERROR_LIST$
+% -------------------------------------------------------------------------------- %
+% -------------------------------------------------------------------------------- %
+$:INFO$
+% ---------------------------- Hinweise ------------------------------------------ %           
+%  $INFO_LIST$
+% -------------------------------------------------------------------------------- %
+$:FEET$
+\end{document}
+

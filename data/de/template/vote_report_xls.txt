@@ -1,0 +1,127 @@
+$:HEAD$
+$@Content-type: application/msexcel$
+$@Content-Disposition: attachment; filename=report.xls$
+
+
+<HTML>
+<!-- leider unterstützt Excel 97 keine CSS //-->
+<style>
+br {
+	mso-data-placement:same-cell;
+}
+
+td {
+	vertical-align:top;
+}
+</style>
+</HEAD>
+
+
+<body>
+
+
+$:VOTE_HEAD$
+<h1>$VOTE_NAME$</h1>
+
+
+$:GROUP_HEAD$
+$:GROUP_HEAD_HEAD$
+$:GROUP_HEAD_ITEM$ <h2>$GROUP_HEAD_NAME$ $GROUP_HEAD_VALUE$</h2>
+$:GROUP_HEAD_FEET$
+$:GROUP_FIELDS_HEAD$
+
+<table>
+<tr bgcolor="#AAAAAA">
+  <th>Frage:</th>
+  <th>Beschreibung:</th>
+  <th>Mittelwert:</th>
+  <th>Verteilung:</th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+  <th></th>
+</tr>
+
+$:FIELD_TYPE_NUMBER_HEAD$
+<!-- --------------------------- Hier kommt eine numerisches Feld ---------------------------------------------- -->
+<tr>
+  <td>$FIELD_NAME$</td>
+  <td>$FIELD_COMMENT$</td>
+
+  <td>$FIELD_AVG$ $FIELD_EINHEIT$ $FIELD_EINHEIT2$</td>
+
+$:FIELD_HISTOGRAMM_H_HEAD$
+$:FIELD_HISTOGRAMM_H_ITEM$
+  <td align="right">$?HISO_NAME$<b>$HISO_NAME$</b>$?$$?HISO_MASS$&nbsp;[$HISO_MASS$]$?$:</td><td>$HISO_VAL$</td>
+$:FIELD_HISTOGRAMM_H_FEET$
+
+$:FIELD_TYPE_NUMBER_FEET$
+</tr>
+
+
+$:FIELD_TYPE_STRING_HEAD$
+<!-- --------------------------- Hier kommt eine String Feld ---------------------------------------------- -->
+<!-- 
+<tr>
+  <td>$FIELD_NAME$</td>
+  <td>$FIELD_COMMENT$</td>
+  <td></td>
+  <td>
+$:FIELD_TYPE_STRING_ITEM$
+  $FIELD_VALUE$<br />
+$:FIELD_TYPE_STRING_FEET$
+  </td>
+</tr>
+--> 
+
+
+$:FIELD_TYPE_OPTION_HEAD$
+<!-- --------------------------- Hier kommt ein Auswahl Feld ---------------------------------------------- -->
+
+<tr>
+  <td>$FIELD_NAME$</td>
+  <td>$FIELD_COMMENT$</td>
+  <td>$FIELD_AVG$ $FIELD_EINHEIT$ $FIELD_EINHEIT2$</td>
+
+$:FIELD_HISTOGRAMM_HEAD$
+$:FIELD_HISTOGRAMM_ITEM$
+  <td align="right">$?HISO_NAME$<b>$HISO_NAME$</b>$?$&nbsp;$?HISO_MASS$&nbsp;[$HISO_MASS$]$?$:</td><td>$HISO_VAL$</td>
+$:FIELD_HISTOGRAMM_FEET$
+$:FIELD_TYPE_OPTION_FEET$
+</tr>
+
+
+
+$:GROUP_FIELDS_FEET$
+</table>
+
+$:GROUP_SUB_HEAD$
+<!-- ------- Untergruppe ---------------- -->
+
+
+$:GROUP_SUB_FEET$
+$:GROUP_FEET$
+<!-- ------- Gruppe schliessen---------------- -->
+$:VOTE_FEET$
+
+
+$:ERROR$
+ Beim erstellen des Dokumentes sind Fehler aufgetreten!
+ $ERROR_LIST$
+
+$:INFO$
+ Hinweise         
+ $INFO_LIST$
+
+<!-- ---------------------------------------- -->
+$:FEET$
+
+

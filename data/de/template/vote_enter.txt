@@ -1,0 +1,458 @@
+$:HEAD$
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<HTML>
+<HEAD>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+  <TITLE>Umfrage</TITLE>
+
+  <link rel="stylesheet" type="text/css" href="static/style.css" />
+
+  <script src="static/vote.js" type="text/javascript"></script>
+
+
+  <script type="text/javascript">
+  <!---
+	//- Globale Variablen ... werden innerhalb des HTML codes befuellt
+
+	//- das sind "assoziativen/assoziirte Arrays"!!
+	var type_arr = new Object();
+	var depending_arr = new Object();
+	var filter_arr = new Object();
+  //-->
+  </script>
+
+
+  <script type="text/javascript">
+  <!---
+	var old_line_nr=0;
+
+	var alow_submit = false;  //- solang dieses Flag false ist wird das Form element nicht gesendet!
+
+
+
+	//////////////////////////////////////////////////////////
+	function clientCallBack(eventname)
+	{
+	  eventname = eventname.toLowerCase(); 
+	  if (eventname=='vote_edit_list_close')
+	  {
+	    doSubmit('refresh');
+	  }
+	  else if (eventname=='vote_edit_filter_close')
+	  {
+	    doSubmit('refresh');
+	  }
+	}
+
+
+
+
+	//////////////////////////////////////////////////////////
+	function doSubmit(new_cmd)
+	{
+	  if (new_cmd)
+	  {
+	    document.form_vote.cmd.value=new_cmd;
+	  }
+	  
+	  alow_submit=true;
+
+	  document.form_vote.submit();
+	}
+
+
+	//////////////////////////////////////////////////////////
+	function do_admin_cmd(field_id, cmd, ask_confirm_del)
+	{
+	  if (ask_confirm_del)
+	  {
+	    Check = confirm("Wollen Sie diesen Eintrag wirklich loeschen?");
+
+	    if (Check != true) return false;
+	  }
+
+
+	  document.form_admin.field_id.value = field_id;
+	  document.form_admin.cmd.value = cmd;
+	  document.form_admin.doscrollto.value = GetScrollY();
+	  document.form_admin.submit();
+	}
+
+	//////////////////////////////////////////////////////////
+	function OpenListFilterWindow(listob)
+	{
+	  if (listob)
+	  {
+	    var v = listob.options[listob.selectedIndex].value;
+	    var t = (v.substr(0,2)).toLowerCase();
+	    var id = v.substr(2,99);
+
+	    if (t=='l_')
+	    {
+	      OpenWindow('vote_edit_list.php?list_id='+ id);
+	    }
+	    else if (t=='f_')
+	    {
+	      OpenWindow('vote_edit_filter.php?filter_id='+ id, 800,600);
+	    }
+	  }
+	}
+
+
+
+
+  //-->
+  </script>
+
+</HEAD>
+
+<BODY style="margin:0px; padding:0px" onload="window.scrollTo(GetScrollX(),$DOSCROLLTO$);">
+
+$:VOTE_HEAD$
+  <table border="0" width="100%" id="head_info"  cellspacing="0" cellpadding="2">
+    <tr>
+      <td nowrap="nowrap">
+	<FORM method="post" ACTION="vote_select.php"  name="form_navi"  id="form_navi" style="margin:0px; padding:0px">
+	  <input type="hidden" name="vid" value="$VOTE_ID$" />
+	  <input type="hidden" name="_sid" value="$SID$" />
+	  <input type="hidden" name="_ch" value="$CH$" />
+	</FORM>
+	<a href="javascript:document.form_navi.submit();">
+	  <img src="$IMAGE_HTML_PATH$vote_home.gif" border="0" align="top" /> Start
+	</a>
+      </td>
+      <td nowrap="nowrap"><b>Umfrage:</b> $VOTE_NAME$</td>
+      <td nowrap="nowrap"><b>Benutzer:</b> $USERNAME$ ($USERNAME_STATUS$)</td>
+      <td nowrap="nowrap"><b>Fragebogen:</b> $session_pos$ von $CURRENT_VOTE_COUNT$</td>
+      <td nowrap="nowrap" align="right">
+	<input type="button" name="next"  onClick="doSubmit('move2prev');" value="Vorherigen &lt;" />
+	<input type="button" name="next"  onClick="doSubmit('move2next');" value=" &gt; N&auml;chsten" />
+	<input type="button" name="next"  onClick="doSubmit('move2new');"  value="Neu *" />
+      </td>
+    </tr>
+  </table>
+
+  
+  <FORM method="post" ACTION="$this$" name="form_vote" onSubmit="return alow_submit;"  id="form_vote">
+    <input type="hidden" name="vid" value="$VOTE_ID$" />
+    <input type="hidden" name="_sid" value="$SID$" />
+    <input type="hidden" name="_ch" value="$CH$" />
+    <input type="hidden" name="edit" value="$is_edit$" />
+
+    <input type="hidden" name="cmd" value="" />
+
+    <H1>Datenaufnahme: $VOTE_NAME$</H1>
+
+$:TYPE_HEAD_2$
+    <table border="1" width="100%"  cellspacing="0" cellpadding="2">
+
+$:TYPE_ITEM_HEAD$
+      <tr id="tr_$VOTE_FIELD_ID$" class="vote_line">
+
+$:TYPE_ITEM_HEAD_EDIT$
+      <tr id="tr_$VOTE_FIELD_ID$" class="vote_line">
+	<td nowrap="nowrap">
+	  <a href="javascript:do_admin_cmd('$VOTE_FIELD_ID$','move_up');"><img src="$IMAGE_HTML_PATH$vote_move_up.gif" border="0" /></a>
+          <a href="javascript:do_admin_cmd('$VOTE_FIELD_ID$','move_down');"><img src="$IMAGE_HTML_PATH$vote_move_down.gif" border="0" /></a>
+	  <a href="javascript:do_admin_cmd('$VOTE_FIELD_ID$','delete',1);"><img src="$IMAGE_HTML_PATH$vote_delete.gif" border="0" /></a>
+	</td>
+
+
+$:TYPE_COMMENT$
+
+	<td class="Vote_Head" colspan="3">$VOTE_FIELD_NAME$&nbsp;</td>
+
+
+
+
+
+$:TYPE_LIST_OP_HEADLINE$
+	<td class="Vote_Head" colspan="2">$VOTE_FIELD_NAME$&nbsp;</td>
+	<td valign="bottom" style="vertical-align:bottom">
+$:TYPE_LIST_OP_HEADLINE_ITEM$
+	<div class="vote_radio_headline">$VOTE_LIST_NAME$</div>
+$:TYPE_LIST_OP_HEADLINE_FEET$
+	</td>
+
+
+
+
+
+$:TYPE_LIST_DD$
+	<td>
+	  <input type="radio" name="line_radio" class="style_radio" value="$VOTE_FIELD_ID$" onClick="selectline('$VOTE_FIELD_ID$');" />
+	  <script type="text/javascript">
+		type_arr["a_$VOTE_FIELD_ID$"]=3;
+	  </script>
+	</td>
+	<td class="vote_infoline_text">$VOTE_FIELD_NAME$:</td>
+	<td>
+	  <select name="value[$VOTE_FIELD_ID$]" size="1" style="width:300px;" onfocus="selectline('$VOTE_FIELD_ID$');"  onKeyPress="return watchKeyPress(event);" onchange="doRefreshs('$VOTE_FIELD_ID$')">
+	    <option value="-1">- Bitte w&auml;hlen -</option>
+$:TYPE_LIST_DD_ITEM$
+	    <option value="$VOTE_LIST_ID$" $VOTE_LIST_SELECTED$>$VOTE_LIST_NAME$</option>
+$:TYPE_LIST_DD_FEET$
+	  </select>
+	</td>
+$:TYPE_LIST_DD_EDIT_FEET$
+	  </select>
+	  <a href="javascript:OpenWindow('vote_edit_list.php?list_id=$LIST_ID$');"><img src="$IMAGE_HTML_PATH$vote_insert.gif" border="0" /></a>
+	</td>
+
+
+
+$:TYPE_LIST_OP$
+	<td>
+	  <input type="radio" name="line_radio" class="style_radio" value="$VOTE_FIELD_ID$" onClick="selectline('$VOTE_FIELD_ID$');" />
+	  <script type="text/javascript">
+		type_arr["a_$VOTE_FIELD_ID$"]=4;
+	  </script>
+	</td>
+	<td class="vote_infoline_text">$VOTE_FIELD_NAME$:</td>
+	<td>
+$:TYPE_LIST_OP_ITEM$
+	  <span style="white-space:nowrap" title="$VOTE_LIST_VALUE$">
+	    <input type="radio" name="value[$VOTE_FIELD_ID$]" value="$VOTE_LIST_ID$" $VOTE_LIST_CHECKED$ id="rd_$VOTE_FIELD_ID$_$VOTE_LIST_ID$" style="width:17px; height:17px" onfocus="selectline('$VOTE_FIELD_ID$');" onKeyPress="return watchKeyPress(event);" />
+	    <label for="rd_$VOTE_FIELD_ID$_$VOTE_LIST_ID$">$VOTE_LIST_NAME$&nbsp;</label>
+	  </span>
+	  <br />
+$:TYPE_LIST_OP_FEET$
+	</td>
+
+
+
+
+
+
+$:TYPE_LIST_OP_NOTEXT$
+	<td>
+	  <input type="radio" name="line_radio" class="style_radio" value="$VOTE_FIELD_ID$" onClick="selectline('$VOTE_FIELD_ID$');" />
+	  <script type="text/javascript">
+		type_arr["a_$VOTE_FIELD_ID$"]=4;
+	  </script>
+	</td>
+	<td class="vote_infoline_text">$VOTE_FIELD_NAME$:</td>
+	<td>
+$:TYPE_LIST_OP_NOTEXT_ITEM$
+	<div class="vote_radio_noheadline" title="$VOTE_LIST_VALUE$ - $VOTE_LIST_NAME$">
+	  <input type="radio" name="value[$VOTE_FIELD_ID$]" value="$VOTE_LIST_ID$" $VOTE_LIST_CHECKED$ id="rd_$VOTE_FIELD_ID$_$VOTE_LIST_ID$" style="width:17px; height:17px" onfocus="selectline('$VOTE_FIELD_ID$');" onKeyPress="return watchKeyPress(event);" />
+	</div>
+$:TYPE_LIST_OP_NOTEXT_FEET$
+	</td>
+
+
+
+$:TYPE_FILTER_DD$
+	<td>
+	  <input type="radio" name="line_radio" class="style_radio" value="$VOTE_FIELD_ID$" onClick="selectline('$VOTE_FIELD_ID$');" />
+	  <script type="text/javascript">
+		type_arr["a_$VOTE_FIELD_ID$"]=3;
+		depending_arr["a_$VOTE_FIELD_ID$"]='$VOTE_DEPEND_ITEM_ID$';
+		filter_arr["a_$VOTE_FIELD_ID$"] = new Object();
+
+$:TYPE_FILTER_DD_SCRIPT_ITEM$
+		filter_arr["a_$VOTE_FIELD_ID$"]["a_$VOTE_DEPEND_LIST_ID$"] = Array($VOTE_LIST_ARRAY$);
+$:TYPE_FILTER_DD_SCRIPT_FEET$
+
+	  </script>
+	</td>
+	<td class="vote_infoline_text">$VOTE_FIELD_NAME$:</td>
+	<td>
+	  <select name="value[$VOTE_FIELD_ID$]" size="1" style="width:300px;" onfocus="selectline('$VOTE_FIELD_ID$');"  onKeyPress="return watchKeyPress(event);"  onchange="doRefreshs('$VOTE_FIELD_ID$')">
+	    <option value="-1">- Bitte w&auml;hlen -</option>
+$:TYPE_FILTER_DD_ITEM$
+	    <option value="$VOTE_LIST_ID$" $VOTE_LIST_SELECTED$>$VOTE_LIST_NAME$</option>
+$:TYPE_FILTER_DD_FEET$
+	  </select>
+	</td>
+$:TYPE_FILTER_DD_EDIT_FEET$
+	  </select>
+	  <a href="javascript:OpenWindow('vote_edit_filter.php?filter_id=$FILTER_ID$&amp;dep_id='+GetCurrentDepValue('$VOTE_FIELD_ID$'),800,600);"><img src="$IMAGE_HTML_PATH$vote_insert.gif" border="0" /></a>
+	</td>
+
+
+
+
+
+
+$:TYPE_STRING$
+	<td>
+	  <input type="radio" name="line_radio" class="style_radio" value="$VOTE_FIELD_ID$" onClick="selectline('$VOTE_FIELD_ID$');" />
+	  <script type="text/javascript">
+		type_arr["a_$VOTE_FIELD_ID$"]=1;
+	  </script>
+	</td>
+	<td class="vote_infoline_text">$VOTE_FIELD_NAME$<br /><span class="small_info" id="len_info_$VOTE_FIELD_ID$">&nbsp;</span></td>
+	<td>
+	  <textarea name="value[$VOTE_FIELD_ID$]" rows="2" style="width:380px" onfocus="selectline('$VOTE_FIELD_ID$');"  onKeyPress="return watchKeyPress(event);" onKeyUp="myMaxLen(this, $VOTE_FIELD_MAX$, 'len_info_$VOTE_FIELD_ID$')">$SET_STRING_VALUE$</textarea>
+	</td>
+
+
+
+
+
+$:TYPE_NUMBER$
+	<td>
+	  <input type="radio" name="line_radio" class="style_radio" value="$VOTE_FIELD_ID$" onClick="selectline('$VOTE_FIELD_ID$');" />
+	  <script type="text/javascript">
+		type_arr["a_$VOTE_FIELD_ID$"]=2;
+	  </script>
+	</td>
+	<td class="vote_infoline_text">$VOTE_FIELD_NAME$:</td>
+	<td>
+	  <input type="text" name="value[$VOTE_FIELD_ID$]" size="5" value="$SET_NUM_VALUE$" onfocus="selectline('$VOTE_FIELD_ID$');"  onKeyPress="return watchKeyPress(event);" />
+	</td>
+
+
+
+$:TYPE_ITEM_FEET$
+      </tr>
+
+$:VOTE_ENTER_FEET$
+      <tr>
+	<td>&nbsp;</td>
+	<td colspan="2">&nbsp;</td>
+      </tr>
+
+      <tr id="tr_999999" class="vote_line">
+	<td>
+	  <input type="radio" name="line_radio" class="style_radio" value="save" onClick="selectline('save');" />
+	  <script type="text/javascript">
+		type_arr["a_save"] = 'save';
+	  </script>
+	</td>
+
+	<td colspan="2">
+          <input type="hidden" name="reload_suppress" value="$reload_suppress$" />
+          <input type="hidden" name="session_pos" value="$session_pos$" />
+	  <input type="button" name="value[save]"  value="Speichern" onclick="doSubmit('save');" />
+	</td>
+      </tr>
+$:VOTE_FEET$
+    </table>
+
+  </FORM>
+
+
+  <FORM method="post" ACTION="" target="editlist" name="form_edit_list" style="margin:0px; padding:0px;">
+    <input type="hidden" name="vid" value="$VOTE_ID$" />
+    <input type="hidden" name="_sid" value="$SID$" />
+    <input type="hidden" name="_ch" value="$CH$" />
+    <input type="hidden" name="edit" value="$is_edit$" />
+  </FORM>
+
+
+
+$:EDIT$
+  <br />
+  <br />
+
+  <FORM method="post" ACTION="$this$" name="form_admin" style="margin:0px; padding:0px;">
+    <input type="hidden" name="vid" value="$VOTE_ID$" />
+    <input type="hidden" name="_sid" value="$SID$" />
+    <input type="hidden" name="_ch" value="$CH$" />
+    <input type="hidden" name="edit" value="$is_edit$" />
+    <input type="hidden" name="field_id" value="-1" />
+    <input type="hidden" name="doscrollto" value="-1" />
+    <input type="hidden" name="cmd" value="" />
+  </FORM>
+
+
+
+  <fieldset style="margin:10px;">
+
+    <legend>Umfrage bearbeiten</legend>
+
+    <FORM method="post" ACTION="$this$" name="form_field_add">
+      <input type="hidden" name="vid" value="$VOTE_ID$" />
+      <input type="hidden" name="cmd" value="add_field" />
+      <input type="hidden" name="_sid" value="$SID$" />
+      <input type="hidden" name="_ch" value="$CH$" />
+      <input type="hidden" name="edit" value="$is_edit$" />
+      <input type="hidden" name="doscrollto" value="99999" />
+
+      <br />
+      <b>Neues Feld anf&uuml;gen:</b><br />
+
+      <table border="0">
+        <tr>
+	  <td width="10">&nbsp;</td>
+	  <td>Name:</td>
+	  <td><input type="text" size="50" maxlength="50" name="new_name" /></td>
+        </tr>
+        <tr>
+	  <td>&nbsp;</td>
+	  <td>Beschreibung:</td>
+	  <td><input type="text" size="100" maxlength="255" name="new_comment" /></td>
+        </tr>
+        <tr>
+	  <td>&nbsp;</td>
+	  <td>Typ:</td>
+	  <td>
+	    <select name="new_type" size="1" style="width:400px;">
+	      <option value="-1">- Bitte w&auml;hlen -</option>
+	      $NEW_TYPE_LIST$
+	    </select>
+	  </td>
+        </tr>
+        <tr>
+	  <td>&nbsp;</td>
+	  <td>Liste:</td>
+	  <td>
+	    <select name="new_list" size="1" style="width:400px;">
+	      <option value="-1">- Bitte w&auml;hlen (wenn n&ouml;tig) -</option>
+	      <optgroup label="Filter">
+	        $NEW_FILTER_LIST$
+	      </optgroup">
+
+	      <optgroup label="Listen">
+	        $NEW_LIST_LIST$
+	      </optgroup label="Namen mit A">
+	    </select>
+	    <a href="javascript:OpenListFilterWindow(document.form_field_add.new_list);"><img src="$IMAGE_HTML_PATH$vote_insert.gif" border="0" /></a>
+	  </td>
+        </tr>
+        <tr>
+	  <td>&nbsp;</td>
+	  <td valign="top">Abh&auml;nigkeit: (*)</td>
+	  <td>
+	    <select name="new_dep_id" size="1" style="width:400px;">
+	      <option value="-1">- Bitte w&auml;hlen (wenn n&ouml;tig)  -</option>
+	      $KNOWN_VOTE_FIELDS_LIST$
+	    </select>
+	    <b>Optional / nur f&uuml;r Filter</b>
+	  </td>
+        </tr>
+        <tr>
+	  <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+	  <td align="right"><input type="submit" value="hinzuf&uuml;gen" /></td>
+        </tr>
+      </table>
+
+     <b>(*)</b> Gibt das Feld an welches f&uuml;r den Filter verwendet werden soll. z.B. Feld: <i>"Vorlesung"</i> f&uuml;r den Filter <i>"Vorlesung zu Dozent"</i>
+
+    </FORM>
+  </fieldset>
+
+$:ERROR$
+  <div id="error_box">
+    <img src="$IMAGE_HTML_PATH$dialog-warning.gif" width="30" alt="Warnung" /> Fehler:
+    <div id="error_text">
+      $ERROR_LIST$
+    </div>
+  </div>
+
+$:INFO$
+  <div id="info_box">
+    <img src="$IMAGE_HTML_PATH$dialog_question.gif" width="30" alt="Information" /> Hinweis:
+    <div id="info_text">
+      $INFO_LIST$
+    </div>
+  </div>
+$:FEET$
+
+
+</BODY>
+</HTML>

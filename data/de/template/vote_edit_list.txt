@@ -1,0 +1,231 @@
+$:HEAD$
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<HTML>
+<HEAD>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+  <TITLE>Umfrage - Liste bearbeiten</TITLE>
+
+  <link rel="stylesheet" type="text/css" href="static/style.css" />
+
+  <script src="static/vote.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+  <!---
+	var DoCallParrentBack = true;
+
+	//////////////////////////////////////////////////////////
+	function doParentCallback()
+	{
+	  if ((DoCallParrentBack) && (window.opener))
+	  {
+	    if (window.opener.clientCallBack)
+	    {
+	      window.opener.clientCallBack("vote_edit_list_close");
+	    }
+	  }
+	}
+
+
+	//////////////////////////////////////////////////////////
+	function GetScrollY()
+	{
+	  if (window.pageYOffset) return window.pageYOffset;
+	  return 0;
+	}
+
+	//////////////////////////////////////////////////////////
+	function do_list_cmd(item_id, cmd, ask_confirm_del)
+	{
+	  if (ask_confirm_del)
+	  {
+	    Check = confirm("Wollen Sie diesen Eintrag wirklich löschen?");
+
+	    if (Check != true) return false;
+	  }
+
+	  DoCallParrentBack =false;
+
+	  document.form_edit.list_item_id.value = item_id;
+	  document.form_edit.cmd.value = cmd;
+	  document.form_edit.doscrollto.value = GetScrollY();
+	  document.form_edit.submit();
+	}
+
+	//////////////////////////////////////////////////////////
+
+  //-->
+  </script>
+
+</HEAD>
+
+<BODY style="margin:0px; padding:0px" onload="window.scrollTo(GetScrollX(),$DOSCROLLTO$);" onUnload="doParentCallback();">
+
+$:HEAD_INFO$
+  <table border="0" width="100%" id="head_info"  cellspacing="0" cellpadding="2">
+    <tr>
+      <td>&nbsp;</td>
+      <td nowrap="nowrap"><b>Liste:</b> $LIST_NAME$</td>
+      <td nowrap="nowrap" align="right"><b>Benutzer:</b> $USERNAME$ ($USERNAME_STATUS$)</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+
+
+$:LIST_HEAD$
+  
+  <FORM method="post" ACTION="$this$" name="form_edit" id="form_edit" style="margin:0px; padding:0px">
+    <input type="hidden" name="vid" value="$VOTE_ID$" />
+    <input type="hidden" name="_sid" value="$SID$" />
+    <input type="hidden" name="_ch" value="$CH$" />
+    <input type="hidden" name="edit" value="$is_edit$" />
+    <input type="hidden" name="doscrollto" value="0" />
+    <input type="hidden" name="list_id" value="$LIST_ID$" />
+    <input type="hidden" name="list_item_id" value="0" />
+
+    <input type="hidden" name="cmd" value="" />
+  </FORM>
+
+
+  <table border="1" cellspacing="0" cellpadding="2"  style="margin:10px;">
+    <tr>
+      <th>&nbsp;</th>
+      <th>Bezeichnung:</th>
+      <th>Wert:</th>
+      <th>Sortierposition:</th>
+    </tr>
+$:LIST_ITEM$
+    <tr>
+      <td nowrap="nowrap">
+	<a href="javascript:do_list_cmd('$ITEM_ID$','move_up');"><img src="$IMAGE_HTML_PATH$vote_move_up.gif" border="0" /></a>
+        <a href="javascript:do_list_cmd('$ITEM_ID$','move_down');"><img src="$IMAGE_HTML_PATH$vote_move_down.gif" border="0" /></a>
+	<a href="javascript:do_list_cmd('$ITEM_ID$','delete',1);"><img src="$IMAGE_HTML_PATH$vote_delete.gif" border="0" /></a>
+      </td>
+      <td>$ITEM_NAME$</td>
+      <td>$ITEM_VALUE$</td>
+      <td>$ITEM_SORTPOS$</td>
+    </tr>
+$:LIST_FEET$
+  </table>
+
+  <FORM method="post" ACTION="$this$" name="form_add"  id="form_add" style="margin:0px; padding:0px"  onSubmit="DoCallParrentBack=false">
+    <input type="hidden" name="vid" value="$VOTE_ID$" />
+    <input type="hidden" name="list_id" value="$LIST_ID$" />
+    <input type="hidden" name="edit" value="$is_edit$" />
+    <input type="hidden" name="cmd" value="add" />
+
+    <input type="hidden" name="_sid" value="$SID$" />
+    <input type="hidden" name="_ch" value="$CH$" />
+
+
+    <fieldset style="margin:10px;">
+      <legend>Eintrag Einf&uuml;gen:</legend>
+      <table border="0">
+        <tr>
+	  <th align="right">Bezeichnung:</th>
+	  <td><input type="text" value="" name="add_name" size="50" maxlength="50"/></td>
+        </tr>
+        <tr>
+	  <th align="right">Wert:</th>
+	  <td><input type="text" value="" name="add_value" size="6" maxlength="10" /></td>
+        </tr>
+        <tr>
+	  <th>&nbsp;</th>
+	  <td><input type="submit" value="Hinzuf&uuml;gen" /></td>
+        </tr>
+      </table>
+    </fieldset>
+    
+  </FORM>
+
+$:ERROR$
+  <div id="error_box">
+    <img src="$IMAGE_HTML_PATH$dialog-warning.gif" width="30" alt="Warnung" /> Fehler:
+    <div id="error_text">
+      $ERROR_LIST$
+    </div>
+  </div>
+
+
+$:ADMIN$
+  <br />
+  <fieldset style="margin:10px;">
+    <legend>Listenoptionen:</legend>
+
+    <FORM method="post" ACTION="$this$" name="form_list_edit" id="form_list_edit" style="margin:0px; padding:0px"  onSubmit="DoCallParrentBack=false">
+      <input type="hidden" name="vid" value="$VOTE_ID$" />
+      <input type="hidden" name="_sid" value="$SID$" />
+      <input type="hidden" name="_ch" value="$CH$" />
+      <input type="hidden" name="list_id" value="$LIST_ID$" />
+      <input type="hidden" name="cmd" value="edit" />
+
+      <table border="0">
+        <tr>
+	  <th align="right">Listen Name:</th>
+	  <td><input type="text" value="$LIST_NAME$" name="edit_name" size="50" maxlength="50" /></td>
+        </tr>
+        <tr>
+	  <th align="right">Rechte:</th>
+	  <td><input type="checkbox" value="1" name="edit_allow_edit" $LIST_ALLOW_EDIT_CHECK$ /> Benutzer darf Liste bearbeiten</td>
+        </tr>
+        <tr>
+	  <th>&nbsp;</th>
+	  <td><input type="submit" value="&Auml;ndern" /></td>
+        </tr>
+      </table>    
+
+
+    </FORM>
+
+
+  </fieldset>
+
+  <br />
+
+  <fieldset style="margin:10px;">
+    <legend>Sortierung:</legend>
+
+    <FORM method="post" ACTION="$this$" name="form_list_sort" id="form_list_sort" style="margin:0px; padding:0px" onSubmit="DoCallParrentBack=false">
+      <input type="hidden" name="vid" value="$VOTE_ID$" />
+      <input type="hidden" name="_sid" value="$SID$" />
+      <input type="hidden" name="_ch" value="$CH$" />
+      <input type="hidden" name="list_id" value="$LIST_ID$" />
+      <input type="hidden" name="cmd" value="sort" />
+
+
+      <table border="0">
+        <tr>
+	  <th align="right">Sortierung:</th>
+	  <td><input type="checkbox" value="1" name="edit_auto_sort"  $LIST_AUTO_SORT_CHECK$  /> Automatisch sortieren (SortPos := 999)</td>
+        </tr>
+        <tr>
+	  <th>&nbsp;</th>
+	  <td><input type="submit" value="&Auml;ndern" /></td>
+        </tr>
+        <tr>
+	  <th align="right">Achtung:</th>
+	  <td> durch &Auml;ndern dieser Einstellung wird das Feld Sort Pos &uuml;berschrieben und die alte Sortierreihenfolge geht verlohren!</td>
+        </tr>
+      </table>    
+
+
+    </FORM>
+
+
+  </fieldset>
+
+
+$:FEET$
+
+  <br />
+  <fieldset style="margin:10px;">
+    <legend>Hilfe:</legend>
+    <b>Sortierung:</b> Wenn eine Liste angezeigt wird dann wird in folgender Reihenfolge sortiere: (<i>Sortierposition</i>, <i>Bezeichnung</i>, <i>Wert</i>). Der Wert <i>"999"</i> ist der Standardwert f&uuml;r die Sortierposition.<br />
+    <b>&Auml;ndern:</b> Listeneintr&auml;ge k&ouml;nnen nur ge&auml;ndert werden wenn sie noch <b>nie</b> benutzt wurden <b>und</b> die Liste freigegeben ist<br /> 
+    Nur die <b>Sortierposition</b> kann ge&auml;ndert werden wenn schon Eintr&auml;ge vorhanden sind!<br />
+    <b>Wert</b> ist eine optionale Zahl die einem Eintrag zugewiesen werden kann (vorzeichenbehaftete 10 Stellige Ganzzahl!)<br />
+    <b>Bezeichnung:</b> Max. 50 stellige Zeichenkette (kein Unicode!)
+  </fieldset>  
+
+</BODY>
+</HTML>

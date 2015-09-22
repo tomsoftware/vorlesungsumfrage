@@ -1,0 +1,175 @@
+$:HEAD$
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<HTML>
+<HEAD>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+  <TITLE>Auswertung</TITLE>
+
+  <link rel="stylesheet" type="text/css" href="static/style.css" />
+
+</HEAD>
+
+<BODY style="margin:0px; padding:0px">
+
+$:VOTE_HEAD$
+  <table border="0" width="100%" id="head_info"  cellspacing="0" cellpadding="2">
+    <tr>
+      <td nowrap="nowrap">
+	<FORM method="post" ACTION="vote_select.php"  name="form_navi"  id="form_navi" style="margin:0px; padding:0px">
+	  <input type="hidden" name="vid" value="$VOTE_ID$" />
+	  <input type="hidden" name="_sid" value="$SID$" />
+	  <input type="hidden" name="_ch" value="$CH$" />
+	</FORM>
+	<a href="javascript:document.form_navi.submit();">
+	  <img src="$IMAGE_HTML_PATH$vote_home.gif" border="0" align="top" /> Start
+	</a>
+      </td>
+      <td nowrap="nowrap"><b>Umfrage:</b> $VOTE_NAME$</td>
+      <td nowrap="nowrap"><b>Benutzer:</b> $USERNAME$ ($USERNAME_STATUS$)</td>
+    </tr>
+  </table>
+
+  
+  <div id="form_vote">
+
+  <H1>Auswertung: $VOTE_NAME$</H1>
+
+
+$:GROUP_HEAD$
+  <br />
+  <table border="1" width="100%" cellspacing="0" cellpadding="2" style="background-color:AAAAAA">
+
+$:GROUP_HEAD_HEAD$
+
+    <tr>
+      <td>
+$:GROUP_HEAD_ITEM$
+	<b>$GROUP_HEAD_NAME$</b>: $GROUP_HEAD_VALUE$<br />
+$:GROUP_HEAD_FEET$
+      </td>
+    </tr>
+
+
+$:GROUP_FIELDS_HEAD$
+    <tr>
+      <td>
+	<table border="0" width="100%" >
+
+$:FIELD_TYPE_NUMBER_HEAD$
+	  <tr>
+	    <td>
+	      <b>$FIELD_COMMENT$</b>
+	      <div style="padding-left:20px">Mittelwert: $FIELD_AVG$ $FIELD_EINHEIT$</div>
+	    </td>
+	    <td align="left">
+$:FIELD_HISTOGRAMM_H_HEAD$
+	    <table border="0" cellspacing="0" cellpadding="1" >
+$:FIELD_HISTOGRAMM_H_ITEM$
+	      <tr>
+		<td>$HISO_NAME$&nbsp;</td>
+	        <td nowrap="nowrap" align="left" title="Anzahl: $HISO_VAL$">
+	          <img src="$IMAGE_HTML_PATH$balken_h_end.gif"  height="27" title="Anzahl: $HISO_VAL$" /><img src="$IMAGE_HTML_PATH$balken_null.gif"  height="27" width="$HISO_VAL_SCAL_TO_50$"  title="Anzahl: $HISO_VAL$" style="background-image:url($IMAGE_HTML_PATH$balken_h_body.gif);background-repeat:no-repeat;" /><img src="$IMAGE_HTML_PATH$balken_h_top.gif" height="27" title="Anzahl: $HISO_VAL$" />
+		  $HISO_VAL$
+	        </td>
+	      </tr>
+$:FIELD_HISTOGRAMM_H_FEET$
+
+	    </table>
+
+$:FIELD_TYPE_NUMBER_FEET$
+	    </td>
+	  </tr>
+
+
+
+$:FIELD_TYPE_STRING_HEAD$
+	  <tr>
+	    <td><b>$FIELD_COMMENT$</b></td>
+	  </tr>
+	  <tr>
+	    <td colspan="2">
+	      <ul>
+$:FIELD_TYPE_STRING_ITEM$
+		<li>$FIELD_VALUE$</li>
+$:FIELD_TYPE_STRING_FEET$
+	      </ul>
+
+	    </td>
+	  </tr>
+
+
+
+
+$:FIELD_TYPE_OPTION_HEAD$
+	  <tr>
+	    <td>
+	      <b>$FIELD_COMMENT$</b>
+	      <div style="padding-left:20px">Mittelwert: $FIELD_AVG$ $FIELD_EINHEIT$</div>
+	    </td>
+	    <td align="left">
+$:FIELD_HISTOGRAMM_HEAD$
+	    <table border="0" cellspacing="0" cellpadding="0" >
+	      <tr>
+$:FIELD_HISTOGRAMM_ITEM$
+	        <td nowrap="nowrap" valign="bottom" align="center" title="Anzahl: $HISO_VAL$" style="font-size:10pt">
+	          <img src="$IMAGE_HTML_PATH$balken_top.gif" title="Anzahl: $HISO_VAL$" /><br />
+	          <img src="$IMAGE_HTML_PATH$balken_null.gif" height="$HISO_VAL_SCAL_TO_50$" title="Anzahl: $HISO_VAL$" width="27" style="background-image:url($IMAGE_HTML_PATH$balken_body.gif);background-repeat:no-repeat;" /><br />
+	          <img src="$IMAGE_HTML_PATH$balken_end.gif" title="Anzahl: $HISO_VAL$" /><br />
+	          $HISO_NAME$
+	        </td>
+$:FIELD_HISTOGRAMM_FEET$
+	      </tr>
+	    </table>
+$:FIELD_TYPE_OPTION_FEET$
+	    </td>
+	  </tr>
+
+
+
+$:GROUP_FIELDS_FEET$
+
+	</table>
+      </td>
+    </tr>
+
+
+$:GROUP_SUB_HEAD$
+    <tr>
+      <td>
+	<table border="1" width="100%" cellspacing="0" cellpadding="2" style="background-color:AAAAAA">
+$:GROUP_SUB_FEET$
+	</table>
+      </td>
+    </tr>
+
+$:GROUP_FEET$
+  </table>
+
+  <br />
+
+
+$:VOTE_FEET$
+
+  </div> 
+
+$:ERROR$
+  <div id="error_box">
+    <img src="$IMAGE_HTML_PATH$dialog-warning.gif" width="30" alt="Warnung" /> Fehler:
+    <div id="error_text">
+      $ERROR_LIST$
+    </div>
+  </div>
+
+$:INFO$
+  <div id="info_box">
+    <img src="$IMAGE_HTML_PATH$dialog_question.gif" width="30" alt="Information" /> Hinweis:
+    <div id="info_text">
+      $INFO_LIST$
+    </div>
+  </div>
+$:FEET$
+
+
+</BODY>
+</HTML>

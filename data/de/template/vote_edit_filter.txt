@@ -1,0 +1,373 @@
+$:HEAD$
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<HTML>
+<HEAD>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+  <TITLE>Umfrage - Filter bearbeiten</TITLE>
+
+  <link rel="stylesheet" type="text/css" href="static/style.css" />
+
+  <script src="static/common.js" type="text/javascript"></script>
+
+  <style type="text/css">
+    #filterlist tr, #filterlist td 
+   {
+	font-size:10pt;
+	border-top: 0px solid gray;
+	border-left: 0px solid gray;
+	border-bottom: 1px solid gray;
+	border-right: 1px solid gray;
+
+    }
+
+    #filterlist tr {text-align:left}
+  </style>
+
+
+  <script type="text/javascript">
+  <!--
+
+	var list_items = Object;
+	var user_has_done_Changes = false;
+	var DoCallParrentBack = true;
+
+	//////////////////////////////////////////////////////////
+	function doParentCallback()
+	{
+	  if ((DoCallParrentBack) && (window.opener))
+	  {
+	    if (window.opener.clientCallBack)
+	    {
+	      window.opener.clientCallBack("vote_edit_filter_close");
+	    }
+	  }
+	}
+
+
+	//////////////////////////////////////////////////////////
+	function clientCallBack(eventname)
+	{
+	  eventname = eventname.toLowerCase(); 
+	  if (eventname=='vote_edit_list_close')
+	  {
+	    SubmitDepend();
+	  }
+	}
+
+
+	//////////////////////////////////////////////////////////
+	function GetScrollY()
+	{
+	  if (window.pageYOffset) return window.pageYOffset;
+	  return 0;
+	}
+
+
+	//////////////////////////////////////////////////////////
+	function delAllFilter()
+	{
+
+	  for(var item in list_items)
+	  {
+	    if (list_items[item]['tr']) delFilter(list_items[item]['id']);
+	  }
+	}
+
+	//////////////////////////////////////////////////////////
+	function delFilter(listid)
+	{
+	  var newRow;
+	  var item;
+	  var i=0;
+	  var tblBody = document.getElementById('tblFilter').tBodies[0];
+	  var lstsrc = document.getElementById('filter_src');
+
+	  item = list_items['a_'+ listid];
+	  newRow = item['tr'];
+
+	  for (i=newRow.cells.lenght; i>0; i--)
+	  {
+	    newRow.deleteCell(i-1);
+	  }
+
+	  if (item['v']!='')
+	  {
+	    lstsrc.options[lstsrc.options.length] = new Option(item['n'] +' - '+ item['v'], listid);
+	  }
+	  else
+	  {
+	    lstsrc.options[lstsrc.options.length] = new Option(item['n'], listid);
+	  }
+
+	  tblBody.deleteRow(newRow.rowIndex);
+	  list_items['a_'+ listid]['tr'] = null;
+
+	  user_has_done_Changes = true;
+	  
+	}
+
+
+	//////////////////////////////////////////////////////////
+	function addFilter(listid, moveall)
+	{
+
+	  var lstsrc = document.getElementById('filter_src');
+	  var tblBody = document.getElementById('tblFilter').tBodies[0];
+	  var newVal;
+	  var item;
+	  var i;
+
+	  if (!listid) listid=-1;
+
+	  moveall=(moveall);
+
+	  for (i = 0; i < lstsrc.length; i++)
+	  {
+	    newVal = lstsrc.options[i].value;
+
+	    if (((lstsrc.options[i].selected == true) && (listid<1)) || (moveall) || (listid==newVal))
+	    {
+
+	      item = list_items['a_'+ newVal];
+
+	      lstsrc.options[i] = null;
+
+	      var newRow = tblBody.insertRow(-1);
+	      var newCell0 = newRow.insertCell(0);
+	      var newCell1 = newRow.insertCell(1);
+	      var newCell2 = newRow.insertCell(2);
+	      var newCell3 = newRow.insertCell(3);
+
+	      newCell0.innerHTML = '<a href="javascript:delFilter(\''+ item['id'] +'\');"><img src="$IMAGE_HTML_PATH$vote_delete.gif" border="0" align="bottom"  \/><\/a>';
+	      newCell1.innerHTML = item['n']?item['n']:'&nbsp;';
+	      newCell2.innerHTML = item['v']?item['v']:'&nbsp;';;
+	      newCell3.innerHTML = '<input type="text" name="filter['+ newVal +']" value="'+ item['fn'] +'" style="width:100px" onChange="user_has_done_Changes=true;" \/>';
+
+
+	      list_items['a_'+ newVal]['tr'] = newRow;
+
+	      user_has_done_Changes = true;
+
+	      i--;
+	    }
+	  }
+	}
+
+	//////////////////////////////////////////////////////////
+	function SubmitDepend()
+	{
+	  if (user_has_done_Changes)
+	  {
+	    Check = confirm("Sie haben etwas an diesem Filter geändert!\nWenn Sie fortfahren werden die Daten N-I-C-H-T gespeichert!\n\nFortfahren?");
+
+	    if (Check != true) return false;
+	  }
+
+	  DoCallParrentBack=false;
+
+	  if (document.form_edit)
+	  {
+	    document.form_edit.submit();
+	  }
+	  else
+	  {
+	    document.form_reload.submit();
+	  }
+	}
+
+
+	//////////////////////////////////////////////////////////
+
+
+	function OpenWindow(dest_adress)
+	{
+	  //- einen eindeutigen Fensternamen generieren
+	  var target_name = "editlist"+ Math.floor(Math.random() * 10000 );
+
+	  var new_width = 500;
+	  var new_height = 700;
+
+	  var new_left = (screen.width - new_width) / 2;
+	  var new_top = (screen.height - new_height) / 2;
+
+	  //- leeres-Fensert öffnen
+	  fenster=window.open("about:blank", target_name , "width="+ new_width +",height="+ new_height +",status=yes,scrollbars=yes,resizable=yes,left="+ new_left +",top="+ new_top);
+
+
+	  //- in das geöffnete Fenster das Formular "form_edit_list" schicken
+	  document.form_edit_list.target = target_name;
+	  document.form_edit_list.action = dest_adress;
+	  document.form_edit_list.submit();
+
+	  //- das Fenster in den vordergrund!
+	  fenster.focus();
+
+	}
+
+	//////////////////////////////////////////////////////////
+  //-->
+  </script>
+
+</HEAD>
+
+<BODY style="margin:0px; padding:0px" onUnload="doParentCallback();">
+
+$:HEAD_INFO$
+  <table border="0" width="100%" id="head_info"  cellspacing="0" cellpadding="2">
+    <tr>
+      <td>&nbsp;</td>
+      <td nowrap="nowrap"><b>Filter:</b> $FILTER_NAME$</td>
+      <td nowrap="nowrap" align="right"><b>Benutzer:</b> $USERNAME$ ($USERNAME_STATUS$)</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+
+  <br />
+
+$:LIST_HEAD$
+  
+
+  <FORM method="post" ACTION="$this$" name="form_reload" id="form_reload" style="margin:0px; padding:0px">
+    <input type="hidden" name="_sid" value="$SID$" />
+    <input type="hidden" name="_ch" value="$CH$" />
+    <input type="hidden" name="edit" value="$is_edit$" />
+    <input type="hidden" name="filter_id" value="$FILTER_ID$" />
+    <input type="hidden" name="cmd" value="" />
+  </FORM>
+
+
+$:LIST_SELECT_DEP$
+
+  <FORM method="post" ACTION="$this$" name="form_edit" id="form_edit" style="margin:0px; padding:10px" onSubmit="return SubmitDepend();">
+    <input type="hidden" name="_sid" value="$SID$" />
+    <input type="hidden" name="_ch" value="$CH$" />
+    <input type="hidden" name="edit" value="$is_edit$" />
+    <input type="hidden" name="doscrollto" value="0" />
+    <input type="hidden" name="filter_id" value="$FILTER_ID$" />
+    <input type="hidden" name="cmd" value="" />
+
+
+    <b>$DEP_LIST_NAME$:</b>&nbsp;
+    <select name="dep_id" size="1" style="width:250px" onChange="SubmitDepend();" >
+      <option value="-1">- Bitte w&auml;hlen -</option>
+      $DEP_LIST_LIST$
+    </select>
+    &nbsp;
+    <input type="submit" value="w&auml;hlen" />
+  </FORM>
+
+
+$:LIST_EDIT_LIST$
+  <FORM method="post" ACTION="" target="editlist2" name="form_edit_list" style="margin:0px; padding:0px;">
+    <input type="hidden" name="vid" value="$VOTE_ID$" />
+    <input type="hidden" name="_sid" value="$SID$" />
+    <input type="hidden" name="_ch" value="$CH$" />
+    <input type="hidden" name="edit" value="$is_edit$" />
+  </FORM>
+
+
+  <table border="0" style="padding:10px">
+    <tr>
+      <td><b>Verf&uuml;gbar Eintr&auml;ge:</b></td>
+      <td>&nbsp;</td>
+      <td><b>In Filter aufgenommen:</b></td>
+    </tr>
+    <tr>
+      <td valign="top" align="right">
+	<select id="filter_src" size="10" multiple="multiple" style="width:300px; height:400px;">
+	  $NOTUSED_LIST_LIST$
+	</select>
+	<br />
+	<a href="javascript:OpenWindow('vote_edit_list.php?list_id=$DESTINATION_LIST_ID$');" style="text-decoration:none"><img src="$IMAGE_HTML_PATH$vote_insert.gif" border="0" /> Liste bearbeiten...</a>
+      </td>
+      <td>
+	<input type="button" value="-&gt;" style="width:50px" onclick="addFilter();" /><br />
+	<br />
+	<br />
+	<input type="button" value="&gt;&gt;" style="width:50px" onclick="addFilter(-1, true);"/><br />
+	<input type="button" value="&lt;&lt;" style="width:50px" onClick="delAllFilter();" /><br />
+      </td>
+
+
+      <td valign="top" align="right">
+	<form method="post" ACTION="$this$" name="form_filter" id="form_filter" style="margin:0px; padding:0px" onsubmit="DoCallParrentBack=false;">
+	  <input type="hidden" name="_sid" value="$SID$" />
+	  <input type="hidden" name="_ch" value="$CH$" />
+	  <input type="hidden" name="edit" value="$is_edit$" />
+	  <input type="hidden" name="doscrollto" value="0" />
+	  <input type="hidden" name="filter_id" value="$FILTER_ID$" />
+	  <input type="hidden" name="dep_id" value="$Depend_Item_ID$" />
+	  <input type="hidden" name="cmd" value="save" />
+
+
+	  <div id="filterlist" style="width:400px; height:400px; overflow:auto; border-left:2px solid #666; border-top:2px solid #666; border-right:2px solid #ccc; border-bottom:2px solid #ccc;">
+	    <table border="0" cellspacing="0" cellpadding="1" width="100%"  id="tblFilter">
+	      <tr style="background-Color:#CCCCCC">
+	        <th style="width:20px">&nbsp;</th>
+	        <th>Name:</th>
+	        <th>W:</th>
+	        <th style="width:104px">Bezeichnung:</th>
+	      </tr>
+
+	    </table>
+	  </div>
+	  <br />
+	  <input type="submit" value="speichern" style="width:200px" />
+	</form>
+      </td>
+
+    </tr>
+  </table>
+
+
+
+$:SET_JAVASCRIPT_DATA_HEAD$
+
+<script type="text/javascript">
+<!--
+
+$:SET_JAVASCRIPT_DATA_ITEM$
+	var item =new Object();
+	item['n'] = '$LIST_ITEM_NAME$';
+	item['v'] = '$LIST_ITEM_VALUE$';
+	item['fn'] = '$FILTER_ITEM_NAME$';
+	item['id'] = '$LIST_ITEM_ID$';
+	list_items['a_$LIST_ITEM_ID$'] =item;
+
+
+$:SET_JAVASCRIPT_DATA_ITEM_ADD$
+	var item =new Object();
+	item['n'] = '$LIST_ITEM_NAME$';
+	item['v'] = '$LIST_ITEM_VALUE$';
+	item['fn'] = '$FILTER_ITEM_NAME$';
+	item['id'] = '$LIST_ITEM_ID$';
+	list_items['a_$LIST_ITEM_ID$'] =item;
+
+	addFilter($LIST_ITEM_ID$);
+
+$:SET_JAVASCRIPT_DATA_FEET$
+
+	//- bis jetzt hat der benutzer nix gemacht!
+	user_has_done_Changes = false;
+
+//-->
+</script>
+
+
+$:ERROR$
+  <div id="error_box">
+    <img src="$IMAGE_HTML_PATH$dialog-warning.gif" width="30" alt="Warnung" /> Fehler:
+    <div id="error_text">
+      $ERROR_LIST$
+    </div>
+  </div>
+
+
+
+
+$:FEET$
+
+  <br />
+</BODY>
+</HTML>
