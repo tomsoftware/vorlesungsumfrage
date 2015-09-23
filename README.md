@@ -1,2 +1,3 @@
 # vorlesungsumfrage
-einfaches (technisch) Eingabe und Auswerte System zur auswertung von (vorlesungs)Umfragen
+
+Einfaches (technisch) Eingabe- und Auswerte-System zur Auswertung von (Vorlesungs)Umfragen

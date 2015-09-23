@@ -34,9 +34,9 @@ function Fieldname_to_DBName($Fieldname)
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
-//- erstellt ein Arra zu einer Liste
+//- erstellt ein Array zu einem Listen Index
 //-	return: [LIST_ID] = Wert(val, name, ...)
-function CreateList(& $InDB, $List_Index)
+function CreateList($InDB, $List_Index)
 {
   $tmp=array();
 
@@ -64,7 +64,7 @@ function CreateList(& $InDB, $List_Index)
 /////////////////////////////////////////////////////////////////////////////////////////
 //- erstellt ein Array mit allen Informationen zu einem Filter
 //-	return: [DEPENDENT_ID][LIST_ID] = Wert(val, name, ...)
-function CreateFilter(& $InDB, $Filter_Index )
+function CreateFilter(&InDB, $Filter_Index )
 {
   $tmp=array();
 
@@ -134,12 +134,12 @@ $inVar_new_list_text = strtolower(trim(GetAllVar('new_list', '')));
 
 
 
-//-- Übergebene Werte auf richtigkeit prüfen
+//-- Übergebene Werte auf Richtigkeit prüfen
 if (!is_array($inVar_Values)) $inVar_Values=array();
 
 
 
-//- übergebene Werte Prüfen
+//- übergebene Werte prüfen
 if ($inVar_Edit==1)
 {
   if ( (!GetvoteIsAdmin() ) ) 
@@ -1036,6 +1036,8 @@ $myTmp->Write('HEAD');
 
 // ************************************************************************************** //
 
+
+//- Fehler ausgeben
 
 if (count($InfoList)>0)
 {
